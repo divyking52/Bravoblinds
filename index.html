@@ -117,7 +117,7 @@ ul,ol{list-style:none}
 .mega-card p{position:absolute;left:18px;right:18px;bottom:16px;z-index:1;color:#fff;font-family:var(--serif);font-size:1.25rem;line-height:1.15;font-style:italic}
 .hdr-actions{display:flex;align-items:center;gap:14px;flex:none;margin-left:auto}
 .nav+.hdr-actions{margin-left:0}
-@media (max-width:1280px){.nav+.hdr-actions{margin-left:auto}}
+@media (max-width:1399px){.nav+.hdr-actions{margin-left:auto}}
 .hdr-phone{display:inline-flex;align-items:center;gap:.55rem;font-weight:700;font-size:.92rem;letter-spacing:.02em;white-space:nowrap}
 .hdr-phone .ph-ico{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--orange);color:#fff}
 .hdr-phone .ph-ico svg{width:15px;height:15px}
@@ -175,6 +175,11 @@ ul,ol{list-style:none}
 .hero-title .ln{display:block;overflow:hidden;padding-bottom:.1em;margin-bottom:-.1em}
 .hero-title .ln>span{display:inline-block}
 .hero-title em{color:var(--orange)}
+.rot span+span::before{content:"\00a0& "}
+.fx .rot{display:inline-grid}
+.fx .rot>span{grid-area:1/1;padding-right:.08em}
+.fx .rot span+span::before{content:none}
+.fx .rot>span+span{opacity:0;visibility:hidden}
 .hero-points{margin-top:1.8rem;display:grid;gap:.5rem;font-weight:600;font-size:1rem;color:var(--grey)}
 .hero-points li{display:flex;align-items:center;gap:.9rem}
 .hero-points li::before{content:"";width:22px;height:1px;background:var(--orange);flex:none}
@@ -665,7 +670,7 @@ ul,ol{list-style:none}
 /* ==========================================================================
    16. RESPONSIVE
    ========================================================================== */
-@media (max-width:1280px){
+@media (max-width:1399px){
   .nav,.hdr-phone .ph-num{display:none}
   .burger{display:grid}
 }
@@ -944,10 +949,9 @@ ul,ol{list-style:none}
   <div class="hero-stage">
     <div class="hero-copy">
       <p class="eyebrow" data-intro>Direct From Our Perth Factory</p>
-      <h1 class="hero-title display">
-        <span class="ln"><span data-intro>High Style &amp;</span></span>
-        <span class="ln"><span data-intro>Top Quality</span></span>
-        <span class="ln"><span data-intro><em>at Low Prices!</em></span></span>
+      <h1 class="hero-title display" aria-label="High Quality Blinds &amp; Curtains">
+        <span class="ln" aria-hidden="true"><span data-intro>High Quality</span></span>
+        <span class="ln" aria-hidden="true"><span data-intro><em class="rot"><span>Blinds</span><span>Curtains</span></em></span></span>
       </h1>
       <ul class="hero-points">
         <li data-intro>Top Quality, Finest Service, Factory Direct Prices</li>
@@ -1870,6 +1874,20 @@ ul,ol{list-style:none}
       .fromTo('.bravo-word', { y: 40, rotation: -14, autoAlpha: 0 }, { y: 0, rotation: -7, autoAlpha: 1, duration: 1.2, ease: 'back.out(1.6)' }, 1.5)
       .fromTo('.hf', { y: 50, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.4, stagger: .12 }, .9);
     window.__heroOK = true;
+
+    /* Headline word swap: Blinds / Curtains */
+    const words = $$('.rot > span', hero);
+    if (words.length > 1) {
+      let i = 0;
+      const swap = () => {
+        const cur = words[i], next = words[(i = (i + 1) % words.length)];
+        gsap.timeline()
+          .to(cur, { yPercent: -105, autoAlpha: 0, duration: .6, ease: 'power3.in' })
+          .fromTo(next, { yPercent: 105, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: .8, ease: 'power3.out' }, '-=.2');
+        gsap.delayedCall(2.6, swap);
+      };
+      gsap.delayedCall(3.2, swap);
+    }
 
     /* Camera zoom target: scale the pane until it covers the viewport. */
     const zoom = () => {
